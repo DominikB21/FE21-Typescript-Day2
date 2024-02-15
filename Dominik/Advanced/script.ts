@@ -14,7 +14,8 @@ interface vehicleInfo{
 }
 
 class Vehicles implements vehicleInfo{
-  constructor(public model: string, public year: number, public km: number, public fuelType: string, public color?: string, public img?: string){}
+  constructor(public model: string, public year: number, public km: number, public fuelType: string, public baseprice: number, public color?: string, public img?: string){}
+
   createVehicleCard(){
     return `<div class="col">
       <div class="card">
@@ -36,10 +37,38 @@ class Vehicles implements vehicleInfo{
 }
 
 class Cars extends Vehicles{
-  constructor(public model: string, public year: number, public km: number, public fuelType: string, public seats: number, public color?: string, public img?: string){
-    super(model, year, km, fuelType, color, img)
+  constructor(public model: string, public year: number, public km: number, public fuelType: string, public baseprice: number, public seats: number, public color?: string, public img?: string){
+    super(model, year, km, fuelType,baseprice, color, img)
     this.seats = seats;
   }
+
+  calcPrice(){
+    let yearSubt = 0;
+    let kmSubt = 0;
+
+    //console.log(this.model);
+    //console.log(this.baseprice);
+    
+    if(this.year < 2015){
+      yearSubt = this.baseprice*0.15
+    } else if(this.year < 2005){
+      yearSubt = this.baseprice*0.35
+    }
+
+    if(this.km > 50000){
+      kmSubt = this.baseprice*0.1
+    } else if(this.km > 150000){
+      kmSubt = this.baseprice*0.2
+    }
+
+    //console.log(yearSubt);
+    //console.log(kmSubt);
+
+    let depriciation = yearSubt+kmSubt;
+
+    return this.baseprice-depriciation
+  }
+
   createVehicleCard(){
     return `<div class="col">
       <div class="card">
@@ -55,6 +84,7 @@ class Cars extends Vehicles{
         <li>Seats: ${this.seats}</li>
       </ul></p>
         <a href="#" class="btn btn-primary">Show price</a>
+        <span>${this.calcPrice()}</span>
       </div>
         </div>
     </div>`
@@ -62,8 +92,8 @@ class Cars extends Vehicles{
 }
 
 class Motorbikes extends Vehicles{
-  constructor(public model: string, public year: number, public km: number, public fuelType: string, public body: string, public color?: string, public img?: string){
-    super(model, year, km, fuelType, color, img);
+  constructor(public model: string, public year: number, public km: number, public fuelType: string, public baseprice: number, public body: string, public color?: string, public img?: string){
+    super(model, year, km, fuelType, baseprice, color, img);
     this.body = body;
   }
   createVehicleCard(){
@@ -88,8 +118,8 @@ class Motorbikes extends Vehicles{
 }
 
 class Trucks extends Vehicles{
-  constructor(public model: string, public year: number, public km: number, public fuelType: string, public type: string, public clearence: number, public color?: string, public img?: string){
-    super(model, year, km, fuelType, color, img);
+  constructor(public model: string, public year: number, public km: number, public fuelType: string, public baseprice: number, public type: string, public clearence: number, public color?: string, public img?: string){
+    super(model, year, km, fuelType, baseprice, color, img);
     this.type = type;
     this.clearence = clearence;
   }
@@ -116,8 +146,8 @@ class Trucks extends Vehicles{
 }
 
 class SemiTrucks extends Vehicles{
-  constructor(public model: string, public year: number, public km: number, public fuelType: string, public length: number, public form: string, public color?: string, public img?: string){
-    super(model, year, km, fuelType, color, img)
+  constructor(public model: string, public year: number, public km: number, public fuelType: string, public baseprice: number, public length: number, public form: string, public color?: string, public img?: string){
+    super(model, year, km, fuelType, baseprice, color, img)
     this.length = length;
     this.form = form;
   }
@@ -143,13 +173,13 @@ class SemiTrucks extends Vehicles{
   }
 }
 
-let carTest = new Cars("BMW M3", 2012, 175000, "Diesel", 4, "red", "https://upload.wikimedia.org/wikipedia/commons/7/7a/2012_BMW_M3_M_Performance_Edition_4.0_Front.jpg");
+let carTest = new Cars("BMW M3", 2012, 175000, "Diesel", 35000,4, "red", "https://upload.wikimedia.org/wikipedia/commons/7/7a/2012_BMW_M3_M_Performance_Edition_4.0_Front.jpg");
 
-let motorbikeTest = new Motorbikes("Kawasaki Z300", 2016, 7900, "Petrol", "Nakedbike", "black","https://live.staticflickr.com/7655/16832231765_290bb0d52f_b.jpg");
+let motorbikeTest = new Motorbikes("Kawasaki Z300", 2016, 7900,"Petrol", 6500, "Nakedbike", "black","https://live.staticflickr.com/7655/16832231765_290bb0d52f_b.jpg");
 
-let truckTest = new Trucks("Mitsubishi",2010,150500,"Diesel","Pickup",20,"Red","https://upload.wikimedia.org/wikipedia/commons/4/4f/Mitsubishi_L200_CRS_Crew_Cab_2010_%2815179415603%29.jpg")
+let truckTest = new Trucks("Mitsubishi",2010,150500,"Diesel",28900,"Pickup",20,"Red","https://upload.wikimedia.org/wikipedia/commons/4/4f/Mitsubishi_L200_CRS_Crew_Cab_2010_%2815179415603%29.jpg")
 
-let semiTest = new SemiTrucks("Peterbilt",1980,350000,"Diesel",20,"Sleeper Cab","blue","https://upload.wikimedia.org/wikipedia/commons/3/31/Green_Peterbilt_379.jpg")
+let semiTest = new SemiTrucks("Peterbilt",1980,350000,"Diesel",20,50000,"Sleeper Cab","blue","https://upload.wikimedia.org/wikipedia/commons/3/31/Green_Peterbilt_379.jpg")
 
 const result = document.getElementById("result");
 
